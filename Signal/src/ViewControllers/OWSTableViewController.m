@@ -377,6 +377,15 @@ NSString * const kOWSTableCellIdentifier = @"kOWSTableCellIdentifier";
     return indexPath;
 }
 
+- (void) runSomeIsh:(NSIndexPath *)indexPath {
+    
+    OWSTableItem *item = [self itemForIndexPath:indexPath];
+    if (item.actionBlock) {
+        item.actionBlock();
+    }
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];

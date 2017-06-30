@@ -16,6 +16,7 @@ typedef enum : NSUInteger { kArchiveState = 0, kInboxState = 1 } CellState;
 
 @property (nonatomic) IBOutlet UILabel *nameLabel;
 @property (nonatomic) IBOutlet UILabel *snippetLabel;
+@property (nonatomic) IBOutlet UILabel *verifiedLabel; // Zappala Edit
 @property (nonatomic) IBOutlet UIImageView *contactPictureView;
 @property (nonatomic) IBOutlet UILabel *timeLabel;
 @property (nonatomic) IBOutlet UIView *contentContainerView;

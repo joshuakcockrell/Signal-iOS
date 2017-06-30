@@ -116,8 +116,8 @@ NS_ASSUME_NONNULL_BEGIN
     NSAttributedString *attributedDate = [self dateAttributedString:thread.lastMessageDate];
     NSUInteger unreadCount = [[TSMessagesManager sharedManager] unreadMessagesInThread:thread];
 
-    self.nameLabel.text = name;
-    self.snippetLabel.attributedText = snippetText;
+    self.nameLabel.text = name; // Phone number
+    self.snippetLabel.attributedText = snippetText; // Text sample
     self.timeLabel.attributedText = attributedDate;
     self.contactPictureView.image = nil;
     [UIUtil applyRoundedBorderToImageView:_contactPictureView];

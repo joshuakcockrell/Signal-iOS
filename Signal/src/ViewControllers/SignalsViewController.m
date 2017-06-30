@@ -390,6 +390,74 @@ NSString *const SignalsViewControllerSegueShowIncomingCall = @"ShowIncomingCallS
     if ((unsigned long)indexPath.row == [self.threadMappings numberOfItemsInSection:0] - 1) {
         cell.separatorInset = UIEdgeInsetsMake(0.f, cell.bounds.size.width, 0.f, 0.f);
     }
+    
+    /////////////////////////////
+    // Zappala Project Edit START
+    // Edit each conversation cell
+    
+    // Clean/wipe the view to start over and avoid visual glitches
+    if (cell.verifiedLabel != NULL) {
+        [cell.verifiedLabel removeFromSuperview];
+    }
+    
+    // Ask the model whether this user is verified
+    // Format the query
+    NSString *verifiedStatus = [NSString stringWithFormat:@"%@/%@", @"verifiedStatus_", thread.contactIdentifier];
+    
+    // Ask if verified
+    Boolean userVerified = [[[NSUserDefaults standardUserDefaults] valueForKey:verifiedStatus] isEqual: @"VERIFIED"];
+    
+    // Get screen dimensions
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    
+    // Create the text view label
+    UILabel* textView = [[UILabel alloc] initWithFrame:CGRectMake(screenWidth - 100, 30, 80, 15)];
+    
+    if (thread.hasSafetyNumbers && userVerified) {
+        
+        // Style the text
+        textView.text = @"Verified";
+        [textView setTextColor:[UIColor ows_signalBrandBlueColor]];
+        
+        // Create checkmark Icon
+        UIImageView *checkMarkIconImageView=[[UIImageView alloc]init];
+        checkMarkIconImageView.frame=CGRectMake(22,3,12,12);
+        checkMarkIconImageView.image=[UIImage imageNamed:@"cellBtnMoveToArchive--blue"];
+        
+        // Attach the checkmark label to the text
+        [textView addSubview:checkMarkIconImageView];
+    }
+    else {
+        
+        // Style the text
+        textView.text = @"Not Verified";
+        [textView setTextColor:[UIColor redColor]];
+        
+        // Create warning Icon
+        UIImageView *warningLabelImageView=[[UIImageView alloc]init];
+        warningLabelImageView.frame=CGRectMake(-2,0,15,15);
+        warningLabelImageView.image=[UIImage imageNamed:@"warning-icon"];
+        
+        // Tint the warning label red
+        warningLabelImageView.image = [warningLabelImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [warningLabelImageView setTintColor:[UIColor redColor]];
+        
+        // Attach the warning label to the text
+        [textView addSubview:warningLabelImageView];
+    }
+    
+    // Finish styling the label
+    [textView setFont:[UIFont systemFontOfSize:12]];
+    textView.textAlignment = NSTextAlignmentRight;
+    
+    // Attach the label to the cell
+    [cell.contentView addSubview:textView];
+    cell.verifiedLabel = textView;
+    
+    // Zappala Project Edit END
+    ///////////////////////////
 
     return cell;
 }

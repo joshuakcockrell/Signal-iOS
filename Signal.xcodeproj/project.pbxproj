@@ -452,8 +452,8 @@
 		34B3F86E1E8DF1700035BE1A /* SignalsNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalsNavigationController.m; sourceTree = "<group>"; };
 		34B3F86F1E8DF1700035BE1A /* SignalsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SignalsViewController.h; sourceTree = "<group>"; };
 		34B3F8701E8DF1700035BE1A /* SignalsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SignalsViewController.m; sourceTree = "<group>"; };
-		34B3F89A1E8DF3270035BE1A /* BlockListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockListViewController.h; sourceTree = "<group>"; };
 		34B3F8981E8DF1B90035BE1A /* TSMessageAdapterTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSMessageAdapterTest.m; sourceTree = "<group>"; };
+		34B3F89A1E8DF3270035BE1A /* BlockListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockListViewController.h; sourceTree = "<group>"; };
 		34B3F89B1E8DF3270035BE1A /* BlockListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BlockListViewController.m; sourceTree = "<group>"; };
 		34B3F89D1E8DF5490035BE1A /* OWSTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OWSTableViewController.h; sourceTree = "<group>"; };
 		34B3F89E1E8DF5490035BE1A /* OWSTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OWSTableViewController.m; sourceTree = "<group>"; };
@@ -1693,12 +1693,12 @@
 				ORGANIZATIONNAME = "Open Whisper Systems";
 				TargetAttributes = {
 					D221A088169C9E5E00537ABF = {
-						DevelopmentTeam = U68MSDN6DR;
+						DevelopmentTeam = F6C3HSPNRU;
 						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.DataProtection = {
-								enabled = 1;
+								enabled = 0;
 							};
 							com.apple.InAppPurchase = {
 								enabled = 0;
@@ -2446,7 +2446,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U68MSDN6DR;
+				DEVELOPMENT_TEAM = F6C3HSPNRU;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -2482,7 +2482,7 @@
 				);
 				LLVM_LTO = NO;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = org.whispersystems.signal;
+				PRODUCT_BUNDLE_IDENTIFIER = org.whispersystemstest.signal;
 				PRODUCT_NAME = Signal;
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2506,7 +2506,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U68MSDN6DR;
+				DEVELOPMENT_TEAM = F6C3HSPNRU;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)",
@@ -2542,7 +2542,7 @@
 				);
 				LLVM_LTO = NO;
 				OTHER_LDFLAGS = "$(inherited)";
-				PRODUCT_BUNDLE_IDENTIFIER = org.whispersystems.signal;
+				PRODUCT_BUNDLE_IDENTIFIER = org.whispersystemstest.signal;
 				PRODUCT_NAME = Signal;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;

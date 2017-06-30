@@ -36,7 +36,7 @@ PODS:
   - Mantle (2.1.0):
     - Mantle/extobjc (= 2.1.0)
   - Mantle/extobjc (2.1.0)
-  - OpenSSL (1.0.210)
+  - OpenSSL-Universal (1.0.2.10)
   - ProtocolBuffers (1.9.11)
   - PureLayout (3.0.2)
   - Reachability (3.2)
@@ -112,7 +112,7 @@ PODS:
 DEPENDENCIES:
   - AxolotlKit (from `https://github.com/WhisperSystems/SignalProtocolKit.git`)
   - JSQMessagesViewController (from `https://github.com/WhisperSystems/JSQMessagesViewController.git`, branch `mkirk/position-edit-menu`)
-  - OpenSSL
+  - OpenSSL-Universal
   - PureLayout
   - SignalServiceKit (from `https://github.com/WhisperSystems/SignalServiceKit.git`)
   - SocketRocket (from `https://github.com/facebook/SocketRocket.git`)
@@ -152,7 +152,7 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   libPhoneNumber-iOS: f721ae4d5854bce60934f9fb9b0b28e8e68913cb
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
-  OpenSSL: 246ffb948e9d56466727fd318134af35f5aa764e
+  OpenSSL-Universal: 6dc366764e8bf6ca93c60bd767d9103146a3b3b6
   ProtocolBuffers: d509225eb2ea43d9582a59e94348fcf86e2abd65
   PureLayout: 4d550abe49a94f24c2808b9b95db9131685fe4cd
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
@@ -164,6 +164,6 @@ SPEC CHECKSUMS:
   UnionFind: c33be5adb12983981d6e827ea94fc7f9e370f52d
   YapDatabase: b1e43555a34a5298e23a045be96817a5ef0da58f
 
-PODFILE CHECKSUM: 549de6756fe8eab98647be8561b3988361f62e85
+PODFILE CHECKSUM: 18f1b11dc757ba22688fcdbd47082734ac2c364b
 
 COCOAPODS: 1.2.1

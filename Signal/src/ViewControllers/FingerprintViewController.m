@@ -97,6 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
     self.privacyVerificationQRCode.layer.magnificationFilter = kCAFilterNearest;
 
     self.privacyVerificationFingerprint.delegate = self;
+    
 }
 
 - (void)viewDidLayoutSubviews
@@ -251,6 +252,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showVerificationSucceeded
 {
+    /////////////////////////////
+    // Zappala Project Edit START
+    
+    // set as verified after scan
+    NSString *verifiedStatus = [NSString stringWithFormat:@"%@/%@",@"verifiedStatus_", self.thread.contactIdentifier];
+    [[NSUserDefaults standardUserDefaults] setObject:@"VERIFIED" forKey:verifiedStatus];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // Zappala Project Edit END
+    ///////////////////////////
+    
     DDLogInfo(@"%@ Successfully verified privacy.", self.tag);
     NSString *successTitle = NSLocalizedString(@"SUCCESSFUL_VERIFICATION_TITLE", nil);
     NSString *dismissText = NSLocalizedString(@"DISMISS_BUTTON_TEXT", nil);

@@ -375,7 +375,7 @@
                     </connections>
                 </barButtonItem>
             </objects>
-            <point key="canvasLocation" x="-860" y="-1285"/>
+            <point key="canvasLocation" x="-613" y="-1290"/>
         </scene>
         <!--Conversation Settings-->
         <scene sceneID="Flt-X5-Amc">
@@ -419,7 +419,7 @@
             <objects>
                 <navigationController storyboardIdentifier="UserInitialViewController" automaticallyAdjustsScrollViewInsets="NO" useStoryboardIdentifierAsRestorationIdentifier="YES" id="tuk-0x-yCb" customClass="SignalsNavigationController" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="VNq-cN-pk9">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="VNq-cN-pk9">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.082137122750282288" green="0.46843802928924561" blue="0.91112053394317627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -529,7 +529,7 @@
         <scene sceneID="nF7-wR-ITu">
             <objects>
                 <navigationController storyboardIdentifier="SettingsNavigationController" id="u7y-N1-6Ba" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="OEe-gh-9Ii">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="OEe-gh-9Ii">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -904,7 +904,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="cZ7-de-SUi" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="gzw-fh-en2">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" translucent="NO" id="gzw-fh-en2">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="barTintColor" red="0.082137122750282288" green="0.46843802928924561" blue="0.91112053394317627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -1026,7 +1026,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ExB-N2-kxx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-612" y="-2546"/>
+            <point key="canvasLocation" x="-449" y="-2547"/>
         </scene>
     </scenes>
     <resources>

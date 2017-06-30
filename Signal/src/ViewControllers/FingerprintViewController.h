@@ -24,6 +24,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)controller:(OWSQRCodeScanningViewController *)controller didDetectQRCodeWithData:(NSData *)data;
 
+- (void)showScannerDelay;
+
 @end
 
 NS_ASSUME_NONNULL_END

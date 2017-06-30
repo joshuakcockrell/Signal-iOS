@@ -46,6 +46,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) UIImageView *avatarView;
 @property (nonatomic, readonly) UILabel *disappearingMessagesDurationLabel;
 
+//@property (nonatomic, readwrite) OWSTableItem *verifyCodeItem;
+
 @end
 
 #pragma mark -
@@ -140,6 +142,35 @@ NS_ASSUME_NONNULL_BEGIN
 
     [self updateTableContents];
 }
+/////////////////////////////
+// Zappala Project Edit START
+// All I did was remove the onclick handler to its own function
+// so we could call it from multiple places in the code
+// Open the finger print view
+- (void)openFingerprintVC {
+    OWSConversationSettingsTableViewController *strongSelf = self;
+    if (!strongSelf) {
+        return;
+    }
+    FingerprintViewController *fingerprintViewController = [[UIStoryboard main]
+                                                            instantiateViewControllerWithIdentifier:@"FingerprintViewController"];
+    
+    OWSFingerprintBuilder *fingerprintBuilder =
+    [[OWSFingerprintBuilder alloc] initWithStorageManager:strongSelf.storageManager
+                                          contactsManager:strongSelf.contactsManager];
+    
+    OWSFingerprint *fingerprint =
+    [fingerprintBuilder fingerprintWithTheirSignalId:strongSelf.thread.contactIdentifier];
+    
+    [fingerprintViewController configureWithThread:strongSelf.thread
+                                       fingerprint:fingerprint
+                                       contactName:[strongSelf threadName]];
+    fingerprintViewController.dismissDelegate = strongSelf;
+    
+    [strongSelf presentViewController:fingerprintViewController animated:YES completion:nil];    
+}
+// Zappala Project Edit END
+///////////////////////////
 
 - (void)updateTableContents
 {
@@ -148,57 +179,43 @@ NS_ASSUME_NONNULL_BEGIN
 
     __weak OWSConversationSettingsTableViewController *weakSelf = self;
 
-    // First section.
-
     OWSTableSection *firstSection = [OWSTableSection new];
-
+    
     firstSection.customHeaderView = [self firstSectionHeader];
     firstSection.customHeaderHeight = @(100.f);
-
+    
+    OWSTableItem *verifyCodeItem = [OWSTableItem itemWithCustomCellBlock:^{
+        UITableViewCell *cell = [UITableViewCell new];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        
+        UIImageView *iconView = [self viewForIconWithName:@"ic_lock_outline"];
+        [cell.contentView addSubview:iconView];
+        [iconView autoVCenterInSuperview];
+        [iconView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:16.f];
+        
+        UILabel *rowLabel = [UILabel new];
+        rowLabel.text = NSLocalizedString(@"VERIFY_PRIVACY", @"table cell label in conversation settings");
+        rowLabel.textColor = [UIColor blackColor];
+        rowLabel.font = [UIFont ows_regularFontWithSize:17.f];
+        rowLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        [cell.contentView addSubview:rowLabel];
+        [rowLabel autoVCenterInSuperview];
+        [rowLabel autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:iconView withOffset:16.f];
+        
+        return cell;
+        
+    }
+         actionBlock:^{
+             /////////////////////////////
+             // Zappala Project Edit START
+             [self openFingerprintVC];
+             // Zappala Project Edit END
+             ///////////////////////////
+        }];
+    
     if (!self.isGroupThread && self.thread.hasSafetyNumbers) {
         [firstSection
-            addItem:[OWSTableItem itemWithCustomCellBlock:^{
-                UITableViewCell *cell = [UITableViewCell new];
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-
-                UIImageView *iconView = [self viewForIconWithName:@"ic_lock_outline"];
-                [cell.contentView addSubview:iconView];
-                [iconView autoVCenterInSuperview];
-                [iconView autoPinEdgeToSuperviewEdge:ALEdgeLeft withInset:16.f];
-
-                UILabel *rowLabel = [UILabel new];
-                rowLabel.text = NSLocalizedString(@"VERIFY_PRIVACY", @"table cell label in conversation settings");
-                rowLabel.textColor = [UIColor blackColor];
-                rowLabel.font = [UIFont ows_regularFontWithSize:17.f];
-                rowLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-                [cell.contentView addSubview:rowLabel];
-                [rowLabel autoVCenterInSuperview];
-                [rowLabel autoPinEdge:ALEdgeLeft toEdge:ALEdgeRight ofView:iconView withOffset:16.f];
-
-                return cell;
-            }
-                        actionBlock:^{
-                            OWSConversationSettingsTableViewController *strongSelf = weakSelf;
-                            if (!strongSelf) {
-                                return;
-                            }
-                            FingerprintViewController *fingerprintViewController = [[UIStoryboard main]
-                                instantiateViewControllerWithIdentifier:@"FingerprintViewController"];
-
-                            OWSFingerprintBuilder *fingerprintBuilder =
-                                [[OWSFingerprintBuilder alloc] initWithStorageManager:strongSelf.storageManager
-                                                                      contactsManager:strongSelf.contactsManager];
-
-                            OWSFingerprint *fingerprint =
-                                [fingerprintBuilder fingerprintWithTheirSignalId:strongSelf.thread.contactIdentifier];
-
-                            [fingerprintViewController configureWithThread:strongSelf.thread
-                                                               fingerprint:fingerprint
-                                                               contactName:[strongSelf threadName]];
-                            fingerprintViewController.dismissDelegate = strongSelf;
-
-                            [strongSelf presentViewController:fingerprintViewController animated:YES completion:nil];
-                        }]];
+            addItem:verifyCodeItem];
     }
 
     [firstSection
@@ -571,6 +588,25 @@ NS_ASSUME_NONNULL_BEGIN
     // HACK to unselect rows when swiping back
     // http://stackoverflow.com/questions/19379510/uitableviewcell-doesnt-get-deselected-when-swiping-back-quickly
     [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:animated];
+    
+    /////////////////////////////
+    // Zappala Project Edit START
+    if (self.jumpToVerify == true) {
+        
+        // DEMO HACK
+        // Set the user as verified
+        NSString *verifiedStatus = [NSString stringWithFormat:@"%@/%@",@"verifiedStatus_", self.thread.contactIdentifier];
+        [[NSUserDefaults standardUserDefaults] setObject:@"VERIFIED" forKey:verifiedStatus];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        
+        // Act like the user clicked on the "Verify Savety Number" button
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableView selectRowAtIndexPath:indexPath animated:false scrollPosition:self.tableView.contentOffset.y]; // jump
+        [self openFingerprintVC];
+    }
+    // Zappala Project Edit END
+    ///////////////////////////
 }
 
 - (void)viewWillDisappear:(BOOL)animated

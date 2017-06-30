@@ -44,6 +44,7 @@
 #import "TSInvalidIdentityKeyErrorMessage.h"
 #import "ThreadUtil.h"
 #import "UIFont+OWS.h"
+#import "UIColor+OWS.h"
 #import "UIUtil.h"
 #import "UIViewController+CameraPermissions.h"
 #import "UIViewController+OWS.h"
@@ -566,6 +567,8 @@ typedef enum : NSUInteger {
 @property (nonatomic) NSCache *messageAdapterCache;
 @property (nonatomic) BOOL userHasScrolled;
 
+@property (weak, nonatomic) UIButton *verifyButton;
+
 @end
 
 @implementation MessagesViewController
@@ -745,6 +748,14 @@ typedef enum : NSUInteger {
                                 contactsManager:self.contactsManager
                                 blockingManager:self.blockingManager];
     }
+    
+    // set default verified
+    
+    NSString *verifiedStatus = [NSString stringWithFormat:@"%@/%@",@"verifiedStatus_", self.thread.contactIdentifier];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:@"NOTVERIFIED" forKey:verifiedStatus];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
 }
 
 - (void)viewDidLayoutSubviews
@@ -763,6 +774,7 @@ typedef enum : NSUInteger {
             invalidateLayoutWithContext:[JSQMessagesCollectionViewFlowLayoutInvalidationContext context]];
     }
 }
+
 
 - (void)registerCustomMessageNibs
 {
@@ -911,7 +923,132 @@ typedef enum : NSUInteger {
     [self resetContentAndLayout];
 
     [((OWSMessagesToolbarContentView *)self.inputToolbar.contentView)ensureSubviews];
+    
+    
+    
+
+    /////////////////////////////
+    // Zappala Project Edit START
+    
+    // Create the secure button
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    CGFloat screenWidth = screenRect.size.width;
+    CGFloat screenHeight = screenRect.size.height;
+    
+    // Wipe the verify button and start over
+    [self.verifyButton removeFromSuperview];
+    
+    // Ask the model whether this user is verified
+    // Format the query
+    NSString *verifiedStatus = [NSString stringWithFormat:@"%@/%@",@"verifiedStatus_", self.thread.contactIdentifier];
+    
+    // Ask if verified
+    Boolean userVerified = [[[NSUserDefaults standardUserDefaults] valueForKey:verifiedStatus] isEqual: @"VERIFIED"];
+    
+    if (self.thread.hasSafetyNumbers && userVerified) {
+            
+        // Create new verify button and style it
+        UIButton *verifyButton = [[UIButton alloc]initWithFrame:CGRectMake(0, screenHeight - 130, screenWidth, 20)];
+        [self.collectionView.superview insertSubview:verifyButton atIndex:1]; // insert into UI
+        [verifyButton setTitle:@"Conversation verified." forState:UIControlStateNormal]; // set text
+        [verifyButton setTitleColor:[UIColor ows_signalBrandBlueColor] forState:UIControlStateNormal]; // set color
+        verifyButton.titleLabel.font = [UIFont systemFontOfSize:12]; // set font
+        [self.collectionView.superview bringSubviewToFront: verifyButton]; // move to front
+        
+        // Checkmark Icon
+        UIImageView *scoreButtonImageView=[[UIImageView alloc]init];
+        scoreButtonImageView.frame=CGRectMake(80,3,15,15); // specify size
+        scoreButtonImageView.image=[UIImage imageNamed:@"cellBtnMoveToArchive--blue"]; // select checkmark icon
+        [verifyButton addSubview:scoreButtonImageView]; // add it in
+        
+        // Save the button
+        self.verifyButton = verifyButton;
+        
+    }
+    else {
+        
+        // create the not verified button
+        UIButton *verifyButton = [[UIButton alloc]initWithFrame:CGRectMake(0, screenHeight - 150, screenWidth, 40)];
+        [self.collectionView.superview insertSubview:verifyButton atIndex:1];
+        [verifyButton setTitle:@"Not Verified. Click to verify." forState:UIControlStateNormal];
+        
+        // Create a warning label
+        UIImageView *warningLabelImageView=[[UIImageView alloc]init];
+        warningLabelImageView.frame=CGRectMake(49,9,20,20);
+        warningLabelImageView.image=[UIImage imageNamed:@"warning-icon"];
+        
+        // Tint the warning label white
+        warningLabelImageView.image = [warningLabelImageView.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [warningLabelImageView setTintColor:[UIColor whiteColor]];
+        
+        // Attach the warning label
+        [verifyButton addSubview:warningLabelImageView];
+        
+        // Style the verify button
+        [verifyButton setBackgroundColor:[UIColor redColor]];
+        [verifyButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        
+        // Style the text
+        verifyButton.titleLabel.font = [UIFont systemFontOfSize:14];
+        [self.collectionView.superview bringSubviewToFront: verifyButton];
+        
+        // Add callback when they tap verify
+        [verifyButton addTarget:self action:@selector(secureButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+        
+        self.verifyButton = verifyButton;
+    }
+    
+    
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"tel:18013698457"]];
+    
+    // Zappala Project Edit END
+    ///////////////////////////
 }
+
+/////////////////////////////
+// Zappala Project Edit START
+// Jump to the settings screen when the user clicks the verify button
+- (void)secureButtonTapped:(UIButton *)sender {
+    
+    if (!self.thread.hasSafetyNumbers) {
+        UIAlertView *noSafetyNumberAlert = [[UIAlertView alloc] initWithTitle:@"Cannot Yet Verify"
+                                                        message:@"Send a simple message before verifying."
+                                                       delegate:self
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [noSafetyNumberAlert show];
+        return;
+    }
+    
+    if (self.userLeftGroup) {
+        DDLogDebug(@"%@ Ignoring request to show conversation settings, since user left group", self.tag);
+        return;
+    }
+    
+    // Grabs the Settings View Controller (init new view)
+    OWSConversationSettingsTableViewController *settingsVC =
+    [[UIStoryboard main] instantiateViewControllerWithIdentifier:@"OWSConversationSettingsTableViewController"];
+    settingsVC.conversationSettingsViewDelegate = self;
+    [settingsVC configureWithThread:self.thread]; // configures it
+    
+    // Move to the settings screen
+    [self.navigationController pushViewController:settingsVC animated:YES];
+    
+    
+    // HACK FOR DEMOS
+    // set as verified after they click the verify button
+    NSString *verifiedStatus = [NSString stringWithFormat:@"%@/%@",@"verifiedStatus_", self.thread.contactIdentifier];
+    [[NSUserDefaults standardUserDefaults] setObject:@"VERIFIED" forKey:verifiedStatus];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    ////////////
+    
+    // Auto jump to the scan screen
+    settingsVC.jumpToVerify = true;
+}
+
+// Zappala Project Edit END
+///////////////////////////
+
 
 - (void)resetContentAndLayout
 {
@@ -1341,6 +1478,7 @@ typedef enum : NSUInteger {
                                            NSForegroundColorAttributeName : [UIColor colorWithWhite:0.9f alpha:1.f],
                                        }]];
     self.navigationBarSubtitleLabel.attributedText = subtitleText;
+    
     [self.navigationBarSubtitleLabel sizeToFit];
 }
 
@@ -1388,7 +1526,6 @@ typedef enum : NSUInteger {
     self.outgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor ows_materialBlueColor]];
     self.currentlyOutgoingBubbleImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor ows_fadedBlueColor]];
     self.outgoingMessageFailedImageData = [bubbleFactory outgoingMessagesBubbleImageWithColor:[UIColor grayColor]];
-
 }
 
 #pragma mark - Fingerprints

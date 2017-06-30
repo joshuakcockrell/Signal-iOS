@@ -14,8 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, weak) id<OWSConversationSettingsViewDelegate> conversationSettingsViewDelegate;
 
+@property (nonatomic) Boolean jumpToVerify;
+
+@property (nonatomic, readwrite) OWSTableItem *verifyCodeItem;
+
 - (void)configureWithThread:(TSThread *)thread;
 - (void)presentedModalWasDismissed;
+- (void)runSomeIsh:(NSIndexPath *)indexPath;
 
 @end
 
